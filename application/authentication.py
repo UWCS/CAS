@@ -8,9 +8,12 @@ def check_login(username, password):
             .filter_by(username=username).first()
     if user is None:
         return False
-    if user.check_password(password):
-        return True
-    return False
+
+    # Check if the user only has an old login, if so try and update it.
+    if user.password is not None:
+        return user.check_password(password)
+    else:
+        return check_legacy_password(password)
 
 def in_group(uid, gid):
     user = db_session.query(User).filter_by(id=uid).first()
@@ -24,7 +27,7 @@ def in_group(uid, gid):
     return False
 
 def group_has_permission(gid, pgroup_name):
-    """Check wheather a group has a specific permission."""
+    """Check weather a group has a specific permission."""
     group = db_session.query(Group).filter_by(id=group)
     if group is None:
         return False

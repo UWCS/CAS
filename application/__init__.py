@@ -18,7 +18,7 @@ Base = declarative_base()
 
 def init_db():
     """Create all the models in the database."""
-    from models import *
+    import application.models
     Base.metadata.create_all(bind=engine)
 
 from core_auth import login

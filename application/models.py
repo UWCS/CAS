@@ -8,8 +8,10 @@ from werkzeug.security import check_password_hash
 from flask.json import JSONEncoder
 
 from application import Base
-
 from application import app
+
+# Legacy password checking requirements
+import hashlib
 
 class SqlJsonEncoder(JSONEncoder):
     """Converts a SQLAlchemy mapped type to a json serialisable dict."""
@@ -56,7 +58,8 @@ class User(Base):
     nickname = Column(String(128))
 
     username = Column(String(50), index=True, nullable=False)
-    password = Column(String(256), nullable=False)
+    password = Column(String(256), nullable=True) # Is null if migrated
+    legacy_password = Colmn(String(256), nullable=True)  # For legacy reasons, from django system.
 
     email_address = Column(String(128))
     website = Column(String(128))
@@ -73,7 +76,8 @@ class User(Base):
     u2f_binding = Column(Text)
 
     def __init__(self, full_name=None, preferred_name=None, nickname=None,
-            username=None, password=None, email_address=None, website=None,
+            username=None, password=None, legacy_password = None,
+            email_address=None, website=None,
             date_joined=datetime.datetime.now(), last_login=None,
             active=False, staff=False, superuser=False):
         self.full_name = full_name
@@ -81,6 +85,7 @@ class User(Base):
         self.nickname = nickname
         self.username = username
         self.set_password(password)
+        self.legacy_password = legacy_password
         self.email_address = email_address
         self.website = website
         self.date_joined = date_joined
@@ -94,6 +99,23 @@ class User(Base):
 
     def check_password(self, plaintext_password):
         return check_password_hash(self.password, plaintext_password)
+
+    def check_legacy_password(self, plaintext_password):
+        """Check if the password from the olde system works."""
+
+        # Do not try to do anything if there is no legacy password
+        if self.legacy_password is None:
+            return False
+
+        pw_chunks = self.legacy_password.split('$')
+        pw_hash = hashlib.sha1(pw_chunks[1] + raw_password).hexdigest()
+        match = (pw_hash == pw_chunks[2])
+        if (not match):
+            return False
+        if (self.password is not None):
+            return True
+        self.password = generate_password_hash(password)
+        return True
 
 
 class UserGroup(Base):
