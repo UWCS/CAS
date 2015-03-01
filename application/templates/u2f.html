@@ -1,0 +1,42 @@
+<doctype html>
+<head>
+	<title>U2F test</title>
+	<script type="text/javascript" src="chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript">
+
+		function respond_enroll(data) {
+			$.ajax({
+				method: "POST",
+				url: "/u2f/enroll",
+				dataType: 'json',
+				data: data
+			}).done(function (response) {
+					console.log(response);
+			});
+		}
+
+		function begin_enroll() {
+			$.ajax({
+				url: "/u2f/enroll",
+				datatype: 'json'
+			}).done(function (data) {
+				console.log(data);
+				u2f.register([data], [], function(response) {
+					console.log(response);
+					respond_enroll(response);
+				});
+			});
+		}
+
+		$(document).ready(function() {
+			console.log("test");
+		});
+	</script>
+</head>
+
+<body>
+	<h1>U2F test</h1>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<h1 class="page-header">Editing: {{user.full_name}}</h1>
+	<div class="col-md-4">
+		<form>
+			
+			<div class="form-group">
+				<label for="full_name">Full name</label>
+				<input type="text" class="form-control" name="full_name" placeholder="Full name" value="{{user.full_name}}">
+			</div>
+
+			<div class="form-group">
+				<label for="preferred_name">Preferred name</label>
+				<input type="text" class="form-control" name="preferred_name" placeholder="Preferred name" value="{{user.preferred_name}}">
+			</div>
+
+			<div class="form-group">
+				<label for="nickname">Nickname</label>
+				<input type="text" class="form-control" name="nickname" placeholder="nickname" value="{{user.nickname}}">
+			</div>
+
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input type="text" class="form-control" name="username" placeholder="username" value="{{user.username}}">
+			</div>
+
+			<div class="form-group">
+				<label for="email">Email address</label>
+				<input type="text" class="form-control" name="email" placeholder="email" value="{{user.email_address}}">
+			</div>
+
+			<div class="form-group">
+				<label for="website">Website</label>
+				<input type="text" class="form-control" name="website" placeholder="Website" value="{{user.website}}">
+			</div>
+
+		</form>
+	</div>
+{% endblock %}

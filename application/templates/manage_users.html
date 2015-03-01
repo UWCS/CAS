@@ -1,0 +1,16 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/user_manager.js') }}"></script>
+<h1 class="page-header">User management</h1>
+<table id="userdata" class="display">
+	<thead>
+		<tr>
+			<td>Full name</td>
+			<td>Nickname</td>
+			<td>Active</td>
+			<td>Edit</td>
+		</tr>
+	</thead>
+</table>
+{% endblock %}
