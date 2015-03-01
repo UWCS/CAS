@@ -15,6 +15,7 @@ from application.wrappers import logged_in, permission_group
 from flask import request
 from flask import session
 from flask import redirect
+from flask import render_template
 from flask import Response
 from flask import Blueprint
 from flask.json import jsonify
@@ -28,7 +29,7 @@ service = Blueprint('AuthService', __name__)
 @logged_in
 def main():
     """Homepage of the application."""
-    return "Welcome to the CompSoc authentication service. You are logged in."
+    return render_template('index.html', title='Welcome to CompSoc!')
 
 
 @service.route('/serviceLogin', methods=['POST'])
@@ -51,6 +52,7 @@ def service_login():
 # User operations.
 @service.route('/users')
 @logged_in
+@permission_group('user_management')
 def get_users():
     """Return all users."""
     users = db_session.query(User)

@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+APP_NAME = 'UWCS_CoreAuth'
+
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
 
@@ -19,6 +21,13 @@ def init_db():
     from models import *
     Base.metadata.create_all(bind=engine)
 
-from application.auth_service import service
 from core_auth import login
-app.register_blueprint(service)
+
+from application.auth_service import service as auth
+app.register_blueprint(auth)
+
+from application.u2f_service import service as u2f
+app.register_blueprint(u2f, url_prefix='/u2f')
+
+from application.dashboard_service import service as dashboard
+app.register_blueprint(dashboard, url_prefix='/dashboard')

@@ -70,6 +70,8 @@ class User(Base):
 
     groups = association_proxy('user_groups', 'group')
 
+    u2f_binding = Column(Text)
+
     def __init__(self, full_name=None, preferred_name=None, nickname=None,
             username=None, password=None, email_address=None, website=None,
             date_joined=datetime.datetime.now(), last_login=None,
@@ -280,3 +282,7 @@ class AuthenticationLog(Base):
         self.success = success
         self.login_ip = login_ip
         self.service_name = service_name
+
+    def __repr__(self):
+        return '<AuthenticationLog user: %s, service: %s, ip: %s>'\
+                % (self.compsoc_user_id, self.service_name, self.login_ip)

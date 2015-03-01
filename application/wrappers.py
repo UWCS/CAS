@@ -22,6 +22,7 @@ def in_group(group):
 
 def permission_group(pgroup):
     def decorator(f):
+        @wraps(f)
         def wrapper(*args, **kwargs):
             user = db_session.query(User)\
                     .filter_by(username=session.get('username'))\
